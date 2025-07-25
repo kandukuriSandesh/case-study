@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Select, MenuItem, Table, TableBody, TableCell, TableHead, TableRow, Typography, Box } from "@mui/material";
 import ConfirmModal from "../components/ConfirmModal";
 import type { Payment } from "../types/types";
-
-const initialPayments: Payment[] = [
-  { id: 1, accountId: 1, amount: 100, recipientName: "John", bankName: "Bank A", recipientAccount: "123456", status: "Pending" },
-  { id: 2, accountId: 2, amount: 200, recipientName: "Jane", bankName: "Bank B", recipientAccount: "654321", status: "Pending" },
-];
+import { dummyPaymentsData } from "../constants";
 
 export default function PaymentList() {
-  const [payments, setPayments] = useState(initialPayments);
+  const [payments, setPayments] = useState<Payment[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+
+    useEffect(() => {
+      // fetch("https://jsonplaceholder.typicode.com/users")
+      //   .then((res) => res.json())
+      //   .then((data) => setAccounts(data));
+      setPayments(dummyPaymentsData);
+    }, []);
 
   const handleApprove = (id: number) => {
     setSelectedId(id);
