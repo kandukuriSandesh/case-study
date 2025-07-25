@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Account } from "../types/types";
-import { Button, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function AccountList() {
@@ -18,28 +18,30 @@ export default function AccountList() {
       <Button variant="contained" component={Link} to="/accounts/new" sx={{ mt: 2, mb: 2 }}>
         New Account
       </Button>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Address</TableCell>
-            <TableCell>Phone</TableCell>
-            <TableCell>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {accounts.map((a) => (
-            <TableRow key={a.id}>
-              <TableCell>{a.name}</TableCell>
-              <TableCell>{a.address?.street || "-"}</TableCell>
-              <TableCell>{a.phone}</TableCell>
-              <TableCell>
-                <Button variant="outlined" component={Link} to={`/accounts/${a.id}`}>Edit</Button>
-              </TableCell>
+      <Box sx={{ overflowX: "auto" }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Address</TableCell>
+              <TableCell>Phone</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {accounts.map((a) => (
+              <TableRow key={a.id}>
+                <TableCell>{a.name}</TableCell>
+                <TableCell>{a.address?.street || "-"}</TableCell>
+                <TableCell>{a.phone}</TableCell>
+                <TableCell>
+                  <Button variant="outlined" component={Link} to={`/accounts/${a.id}`}>Edit</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Box>
     </>
   );
 }

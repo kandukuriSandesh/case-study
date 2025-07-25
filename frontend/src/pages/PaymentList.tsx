@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Select, MenuItem, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Button, Select, MenuItem, Table, TableBody, TableCell, TableHead, TableRow, Typography, Box } from "@mui/material";
 import ConfirmModal from "../components/ConfirmModal";
 import type { Payment } from "../types/types";
 
@@ -31,32 +31,34 @@ export default function PaymentList() {
       <Button variant="contained" href="/payments/new" sx={{ mt: 2, mb: 2 }}>
         New Payment
       </Button>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Recipient</TableCell>
-            <TableCell>Amount</TableCell>
-            <TableCell>Status</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {payments.map(p => (
-            <TableRow key={p.id}>
-              <TableCell>{p.recipientName}</TableCell>
-              <TableCell>${p.amount}</TableCell>
-              <TableCell>
-                <Select
-                  value={p.status}
-                  onChange={() => handleApprove(p.id)}
-                >
-                  <MenuItem value="Pending">Pending</MenuItem>
-                  <MenuItem value="Approved">Approved</MenuItem>
-                </Select>
-              </TableCell>
+      <Box sx={{ overflowX: "auto" }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Recipient</TableCell>
+              <TableCell>Amount</TableCell>
+              <TableCell>Status</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {payments.map(p => (
+              <TableRow key={p.id}>
+                <TableCell>{p.recipientName}</TableCell>
+                <TableCell>${p.amount}</TableCell>
+                <TableCell>
+                  <Select
+                    value={p.status}
+                    onChange={() => handleApprove(p.id)}
+                  >
+                    <MenuItem value="Pending">Pending</MenuItem>
+                    <MenuItem value="Approved">Approved</MenuItem>
+                  </Select>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Box>
       <ConfirmModal open={modalOpen} onClose={() => setModalOpen(false)} onConfirm={confirmStatusChange} />
     </>
   );
