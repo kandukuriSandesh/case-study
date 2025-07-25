@@ -1,8 +1,16 @@
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes";
+import { Container, CssBaseline } from "@mui/material";
 
-const App = () => {
+function App() {
   return (
-    <div className='bg-red-500 text-white'>case study</div>
-  )
+    <BrowserRouter>
+      <CssBaseline />
+      <Container maxWidth="lg" sx={{ mt: 4 }}>
+        <AppRoutes />
+      </Container>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
