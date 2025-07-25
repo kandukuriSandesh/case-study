@@ -14,5 +14,5 @@ export type Payment = {
   bankName: string;
   recipientAccount: string;
   notes?: string;
-  status: "Pending" | "Approved";
+  status: string
 };
