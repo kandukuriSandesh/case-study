@@ -9,7 +9,6 @@ import {
   ParseIntPipe,
   HttpCode,
   HttpStatus,
-  ConflictException
 } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
 import { Account } from './accounts.entity';

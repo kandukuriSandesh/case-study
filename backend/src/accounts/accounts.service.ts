@@ -47,18 +47,18 @@ export class AccountsService {
     return this.accountRepo.save(account);
   }
 
-async update(id: number, data: UpdateAccountDto): Promise<Account> {
-  const account = await this.findOne(id); // already checks if account exists
+  async update(id: number, data: UpdateAccountDto): Promise<Account> {
+    const account = await this.findOne(id); // already checks if account exists
 
-  // Only assign fields if they are provided
-  if (data.name !== undefined) account.name = data.name;
-  if (data.address !== undefined) account.address = data.address;
-  if (data.phoneNumber !== undefined) account.phoneNumber = data.phoneNumber;
-  if (data.bankAccountNumber !== undefined) account.bankAccountNumber = data.bankAccountNumber;
+    // Only assign fields if they are provided
+    if (data.name !== undefined) account.name = data.name;
+    if (data.address !== undefined) account.address = data.address;
+    if (data.phoneNumber !== undefined) account.phoneNumber = data.phoneNumber;
+    if (data.bankAccountNumber !== undefined)
+      account.bankAccountNumber = data.bankAccountNumber;
 
-  return this.accountRepo.save(account);
-}
-
+    return this.accountRepo.save(account);
+  }
 
   async remove(id: number): Promise<void> {
     await this.accountRepo.delete(id);
