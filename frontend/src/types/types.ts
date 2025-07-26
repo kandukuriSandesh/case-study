@@ -2,8 +2,8 @@ export type Account = {
   id: number;
   name: string;
   address: string;
-  phone: string;
-  bankAccount?: string;
+  phoneNumber: string;
+  bankAccountNumber?: string;
 };
 
 export type Payment = {

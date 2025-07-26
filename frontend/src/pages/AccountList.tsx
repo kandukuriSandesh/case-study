@@ -2,16 +2,17 @@ import { useEffect, useState } from "react";
 import type { Account } from "../types/types";
 import { Box, Button, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import { dummyAccountsData } from "../constants";
+import { fetchAccounts } from "../api/accountapi";
 
 export default function AccountList() {
   const [accounts, setAccounts] = useState<Account[]>([]);
 
   useEffect(() => {
-    // fetch("https://jsonplaceholder.typicode.com/users")
-    //   .then((res) => res.json())
-    //   .then((data) => setAccounts(data));
-    setAccounts(dummyAccountsData);
+    const loadData = async () => {
+      const data = await fetchAccounts();
+      setAccounts(data);
+    };
+    loadData();
   }, []);
 
   return (
@@ -24,25 +25,37 @@ export default function AccountList() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Address</TableCell>
-              <TableCell>Phone</TableCell>
-              <TableCell>Bank Account Number</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Address</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Phone</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Bank Account Number</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {accounts.map((a) => (
-              <TableRow key={a.id}>
-                <TableCell>{a.name}</TableCell>
-                <TableCell>{a.address || "-"}</TableCell>
-                <TableCell>{a.phone}</TableCell>
-                <TableCell>{a.bankAccount || "-"}</TableCell>
-                <TableCell>
-                  <Button variant="outlined" component={Link} to={`/accounts/${a.id}`}>Edit</Button>
+            {accounts.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} align="center">
+                  No accounts available.
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              accounts.map((a) => (
+                <TableRow key={a.id}>
+                  <TableCell>{a.name}</TableCell>
+                  <TableCell>{a.address}</TableCell>
+                  <TableCell>{a.phoneNumber.startsWith("+44")
+                    ? `+44 ${a.phoneNumber.slice(3)}`
+                    : a.phoneNumber}</TableCell>
+                  <TableCell>{a.bankAccountNumber || "N/A"}</TableCell>
+                  <TableCell>
+                    <Button variant="outlined" component={Link} to={`/accounts/${a.id}`}>
+                      Edit
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </Box>
