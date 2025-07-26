@@ -2,7 +2,7 @@ import {
   Controller,
   Get,
   Post,
-  Put,
+  Patch,
   Delete,
   Param,
   Body,
@@ -14,6 +14,7 @@ import {
 import { AccountsService } from './accounts.service';
 import { Account } from './accounts.entity';
 import { CreateAccountDto } from './dto/create-account.dto';
+import { UpdateAccountDto } from './dto/update-account.dto';
 
 @Controller('accounts')
 export class AccountsController {
@@ -37,11 +38,11 @@ export class AccountsController {
     return this.accountsService.create(data);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @HttpCode(HttpStatus.OK)
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() data: CreateAccountDto, // I am using the same DTO for update as well assuming frontend sends me name,address,phoneNumber as they are mandatory
+    @Body() data: UpdateAccountDto,
   ): Promise<Account> {
     return this.accountsService.update(id, data);
   }

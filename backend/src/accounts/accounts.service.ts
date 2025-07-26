@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Account } from './accounts.entity';
 import { CreateAccountDto } from './dto/create-account.dto';
+import { UpdateAccountDto } from './dto/update-account.dto';
 
 @Injectable()
 export class AccountsService {
@@ -46,16 +47,18 @@ export class AccountsService {
     return this.accountRepo.save(account);
   }
 
-  async update(id: number, data: CreateAccountDto): Promise<Account> {
-    const account = await this.findOne(id);
+async update(id: number, data: UpdateAccountDto): Promise<Account> {
+  const account = await this.findOne(id); // already checks if account exists
 
-    account.name = data.name;
-    account.address = data.address;
-    account.phoneNumber = data.phoneNumber;
-    account.bankAccountNumber = data.bankAccountNumber;
+  // Only assign fields if they are provided
+  if (data.name !== undefined) account.name = data.name;
+  if (data.address !== undefined) account.address = data.address;
+  if (data.phoneNumber !== undefined) account.phoneNumber = data.phoneNumber;
+  if (data.bankAccountNumber !== undefined) account.bankAccountNumber = data.bankAccountNumber;
 
-    return this.accountRepo.save(account);
-  }
+  return this.accountRepo.save(account);
+}
+
 
   async remove(id: number): Promise<void> {
     await this.accountRepo.delete(id);
