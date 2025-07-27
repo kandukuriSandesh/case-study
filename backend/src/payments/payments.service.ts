@@ -4,7 +4,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, MoreThan } from 'typeorm';
 import { Payment } from './payments.entity';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
@@ -33,37 +33,37 @@ export class PaymentsService {
   }
 
   async create(data: CreatePaymentDto): Promise<Payment> {
-  const account = await this.accountRepo.findOneBy({ id: data.accountId });
-  if (!account) throw new NotFoundException('Account not found');
+    const account = await this.accountRepo.findOneBy({ id: data.accountId });
+    if (!account) throw new NotFoundException('Account not found');
 
-  if (!data.force) {
-    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+    if (!data.force) {
+      const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
 
-    const duplicate = await this.paymentRepo.findOne({
-      where: {
-        account: { id: data.accountId },
-        amount: data.amount,
-        recipientAccountNumber: data.recipientAccountNumber,
-        createdAt: MoreThan(tenMinutesAgo),
-      },
+      const duplicate = await this.paymentRepo.findOne({
+        where: {
+          account: { id: data.accountId },
+          amount: data.amount,
+          recipientAccountNumber: data.recipientAccountNumber,
+          createdAt: MoreThan(tenMinutesAgo),
+        },
+      });
+
+      if (duplicate) {
+        throw new ConflictException({
+          message: 'A similar payment was made recently.',
+          allowDuplicate: true,
+        });
+      }
+    }
+
+    const payment = this.paymentRepo.create({
+      ...data,
+      account,
+      status: 'Pending',
     });
 
-    if (duplicate) {
-      throw new ConflictException({
-        message: 'A similar payment was made recently.',
-        allowDuplicate: true,
-      });
-    }
+    return this.paymentRepo.save(payment);
   }
-
-  const payment = this.paymentRepo.create({
-    ...data,
-    account,
-    status: 'Pending',
-  });
-
-  return this.paymentRepo.save(payment);
-}
 
   async update(id: number, data: UpdatePaymentDto): Promise<Payment> {
   const payment = await this.findOne(id);
@@ -86,6 +86,9 @@ export class PaymentsService {
   if (data.status !== undefined) payment.status = data.status;
 
   return this.paymentRepo.save(payment);
-}
+  }
 
+  async remove(id: number): Promise<void> {
+    await this.paymentRepo.delete(id);
+  }
 }
