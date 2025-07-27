@@ -50,6 +50,7 @@ export default function ControlledTextField({
                       {adornmentStart}
                     </InputAdornment>
                   ),
+                  inputProps: adornmentStart === "+44" ? { maxLength: 10 } : undefined,
                 }
               : undefined,
           }}
