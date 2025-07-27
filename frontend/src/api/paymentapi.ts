@@ -7,7 +7,7 @@ export const fetchPayments = async (): Promise<Payment[]> => {
   try {
     const res = await axios.get("/api/payments");
     return res.data;
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error(err);
     toast.error("Failed to load payments");
     return [];
@@ -24,7 +24,7 @@ export const createPayment = async (
     const res = await axios.post("/api/payments", payload);
     toast.success("Payment created successfully");
     return res.data;
-  } catch (err: any) {
+  } catch (err:unknown) {
     if (err.response?.status === 409 && err.response?.data?.allowDuplicate) {
       return err.response.data; // trigger modal
     }
@@ -40,7 +40,7 @@ export const updatePaymentStatus = async (id: number, status: "Pending" | "Appro
     const res = await axios.patch(`/api/payments/${id}`, { status });
     toast.success("Payment status updated");
     return res.data;
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error(err);
     toast.error("Failed to update payment");
     return null;

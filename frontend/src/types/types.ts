@@ -16,3 +16,21 @@ export type Payment = {
   notes?: string;
   status: string;
 };
+
+export interface PaymentFormData {
+  accountId: string;            
+  amount: string;                
+  recipientName: string;
+  recipientBank: string;
+  recipientAccountNumber: string;
+  notes?: string;
+}
+
+export interface FormattedPaymentData {
+  accountId: number;
+  amount: number;
+  recipientName: string;
+  recipientBank: string;
+  recipientAccountNumber: string;
+  notes?: string;
+}

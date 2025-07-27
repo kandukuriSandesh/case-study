@@ -105,6 +105,9 @@ export default function PaymentList() {
         </Table>
       </Box>
       <ConfirmModal
+        title='Confirm Approval'
+        contentText='Are you sure you want to change the payment status to "Approved"?'
+        confirmButtonText='Confirm'
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onConfirm={confirmStatusChange}

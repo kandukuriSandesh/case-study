@@ -31,12 +31,8 @@ export default function AccountFormPage() {
 }, [id, reset]);
 
 
-  // If id exists, fetch account data and reset form with it
-  // If not, form will be empty for creating a new account
-
   const onSubmit = async (data: Account) => {
     try {
-      // Prepend +44 to the phone number
       const phoneNumberWithPrefix = `+44${data.phoneNumber}`;
 
       const updatedData: Account = {
@@ -65,15 +61,17 @@ export default function AccountFormPage() {
     <Box>
       <Typography variant="h5" mb={2}>{isEdit ? "Edit" : "New"} Account</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <TextField label="Name" InputLabelProps={{ shrink: true }} fullWidth margin="normal" {...register("name")} required />
-        <TextField label="Address" InputLabelProps={{ shrink: true }} fullWidth margin="normal" {...register("address")} required />
+        <TextField label="Name" slotProps={{ inputLabel:{shrink: true} }} fullWidth margin="normal" {...register("name")} required />
+        <TextField label="Address" slotProps={{ inputLabel:{shrink: true} }} fullWidth margin="normal" {...register("address")} required />
         <TextField
           label="Phone"
-          InputLabelProps={{ shrink: true }}
           fullWidth
           margin="normal"
-          InputProps={{
-            startAdornment: <InputAdornment position="start">+44</InputAdornment>,
+          slotProps={{
+            input: {
+              startAdornment: <InputAdornment position="start">+44</InputAdornment>,
+            },
+            inputLabel:{shrink: true}
           }}
           {...register("phoneNumber", {
             required: "Phone number is required",
@@ -86,7 +84,7 @@ export default function AccountFormPage() {
           helperText={errors.phoneNumber?.message}
         />
 
-        <TextField InputLabelProps={{ shrink: true }} label="Bank Account (optional)" fullWidth margin="normal" {...register("bankAccountNumber")} />
+        <TextField slotProps={{ inputLabel:{shrink: true} }} label="Bank Account (optional)" fullWidth margin="normal" {...register("bankAccountNumber")} />
         <Button type="submit" variant="contained">Submit</Button>
       </form>
     </Box>

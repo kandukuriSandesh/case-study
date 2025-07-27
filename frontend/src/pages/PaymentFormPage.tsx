@@ -4,24 +4,24 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { createPayment } from "../api/paymentapi";
 import { fetchAccounts } from "../api/accountapi";
-import type { Account } from "../types/types";
+import type { Account,PaymentFormData,FormattedPaymentData } from "../types/types";
 import { toast } from "react-toastify";
-import DuplicatePaymentModal from "../components/DuplicatePaymentModal";
+import ConfirmModal from "../components/ConfirmModal";
 
 export default function PaymentFormPage() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm<PaymentFormData>();
   const navigate = useNavigate();
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
   const [duplicateModalOpen, setDuplicateModalOpen] = useState(false);
-  const [pendingData, setPendingData] = useState<any | null>(null);
+  const [pendingData, setPendingData] = useState<FormattedPaymentData | null>(null);
 
   useEffect(() => {
     const loadAccounts = async () => {
       try {
         const data = await fetchAccounts();
         setAccounts(data);
-      } catch (err) {
+      } catch (err:unknown) {
         toast.error("Failed to load accounts");
       } finally {
         setLoading(false);
@@ -30,13 +30,13 @@ export default function PaymentFormPage() {
     loadAccounts();
   }, []);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: PaymentFormData) => {
     if (accounts.length === 0) {
       toast.error("No accounts found. Cannot create payment.");
       return;
     }
 
-    const formattedData = {
+    const formattedData:FormattedPaymentData = {
       ...data,
       accountId: Number(data.accountId),
       amount: parseFloat(data.amount),
@@ -83,7 +83,7 @@ export default function PaymentFormPage() {
           >
             {accounts.map((acc) => (
               <MenuItem key={acc.id} value={acc.id}>
-                (ID: {acc.id}) {acc.name}
+                 {acc.name}
               </MenuItem>
             ))}
           </TextField>
@@ -107,7 +107,10 @@ export default function PaymentFormPage() {
         </form>
       )}
 
-      <DuplicatePaymentModal
+      <ConfirmModal
+        title="Duplicate Payment Warning"
+        contentText="A similar payment was made recently. Do you still want to proceed?"
+        confirmButtonText="Proceed Anyway"
         open={duplicateModalOpen}
         onClose={() => setDuplicateModalOpen(false)}
         onConfirm={handleForceSubmit}

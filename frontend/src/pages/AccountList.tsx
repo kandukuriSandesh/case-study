@@ -47,9 +47,22 @@ export default function AccountList() {
                   <TableCell>{a.phoneNumber.startsWith("+44")
                     ? `+44 ${a.phoneNumber.slice(3)}`
                     : a.phoneNumber}</TableCell>
-                  <TableCell>{a.bankAccountNumber || "N/A"}</TableCell>
+                  <TableCell>{a.bankAccountNumber || "-"}</TableCell>
                   <TableCell>
-                    <Button variant="outlined" component={Link} to={`/accounts/${a.id}`}>
+                    <Button 
+                    variant="outlined" 
+                    component={Link} 
+                    to={`/accounts/${a.id}`}
+                    sx={{
+                      color: "primary.main",
+                      borderColor: "primary.main",
+                      "&:hover": {
+                        color: "white",
+                        backgroundColor: "primary.main",
+                        borderColor: "primary.main",
+                      },
+                    }}
+                    >
                       Edit
                     </Button>
                   </TableCell>
