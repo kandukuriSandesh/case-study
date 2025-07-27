@@ -1,31 +1,56 @@
 import { useEffect, useState } from "react";
-import { Button, Select, MenuItem, Table, TableBody, TableCell, TableHead, TableRow, Typography, Box } from "@mui/material";
+import {
+  Button,
+  Select,
+  MenuItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+  Box,
+} from "@mui/material";
 import ConfirmModal from "../components/ConfirmModal";
 import type { Payment } from "../types/types";
-import { dummyPaymentsData } from "../constants";
+import { fetchPayments, updatePaymentStatus } from "../api/paymentApi";
 
 export default function PaymentList() {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [newStatus, setNewStatus] = useState<"Pending" | "Approved" | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-    useEffect(() => {
-      // fetch("https://jsonplaceholder.typicode.com/users")
-      //   .then((res) => res.json())
-      //   .then((data) => setAccounts(data));
-      setPayments(dummyPaymentsData);
-    }, []);
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await fetchPayments();
+      setPayments(data);
+    };
+    loadData();
+  }, []);
 
-  const handleApprove = (id: number) => {
+  const handleStatusChange = (id: number, status: "Pending" | "Approved") => {
     setSelectedId(id);
+    setNewStatus(status);
     setModalOpen(true);
   };
 
-  const confirmStatusChange = () => {
-    setPayments(prev =>
-      prev.map(p => p.id === selectedId ? { ...p, status: "Approved" } : p)
-    );
+  const confirmStatusChange = async () => {
+    if (selectedId === null || newStatus === null) return;
+
+    const updated = await updatePaymentStatus(selectedId, newStatus);
+
+    if (updated) {
+      setPayments((prev) =>
+        prev.map((p) =>
+          p.id === selectedId ? { ...p, status: newStatus } : p
+        )
+      );
+    }
+
     setModalOpen(false);
+    setSelectedId(null);
+    setNewStatus(null);
   };
 
   return (
@@ -38,31 +63,48 @@ export default function PaymentList() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Recipient</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Status</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Recipient</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Amount</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Account Holder</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {payments.map(p => (
-              <TableRow key={p.id}>
-                <TableCell>{p.recipientName}</TableCell>
-                <TableCell>${p.amount}</TableCell>
-                <TableCell>
-                  <Select
-                    value={p.status}
-                    onChange={() => handleApprove(p.id)}
-                  >
-                    <MenuItem value="Pending">Pending</MenuItem>
-                    <MenuItem value="Approved">Approved</MenuItem>
-                  </Select>
+            {payments.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} align="center">
+                  No payments available.
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              payments.map((p) => (
+                <TableRow key={p.id}>
+                  <TableCell>{p.recipientName}</TableCell>
+                  <TableCell>£{" "}{Number(p.amount).toFixed(2)}</TableCell>
+                  <TableCell>{p.account?.name || "Unknown"}</TableCell>
+                  <TableCell>
+                    <Select
+                      value={p.status}
+                      onChange={(e) =>
+                        handleStatusChange(p.id, e.target.value as "Pending" | "Approved")
+                      }
+                    >
+                      <MenuItem value="Pending">Pending</MenuItem>
+                      <MenuItem value="Approved">Approved</MenuItem>
+                    </Select>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </Box>
-      <ConfirmModal open={modalOpen} onClose={() => setModalOpen(false)} onConfirm={confirmStatusChange} />
+      <ConfirmModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onConfirm={confirmStatusChange}
+      />
     </>
   );
 }
+
