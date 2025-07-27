@@ -1,4 +1,4 @@
-import axios, { isAxiosError } from "axios";
+import axios, {isAxiosError} from './axiosInstance'; // Assuming you have a custom axios instance set up
 import { toast } from "react-toastify";
 import type { Payment } from "../types/types";
 

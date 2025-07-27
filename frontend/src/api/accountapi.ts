@@ -1,11 +1,11 @@
-import axios, { isAxiosError } from "axios";
+import axios, {isAxiosError} from './axiosInstance';
 import { toast } from "react-toastify";
 import type { Account } from "../types/types";
 
 export const fetchAccounts = async (): Promise<Account[]> => {
   try {
     const res = await axios.get("/api/accounts");
-    return res.data;
+     return Array.isArray(res.data) ? res.data : [];;
   } catch (err: unknown) {
     console.error(err);
     toast.error("Failed to load accounts");
