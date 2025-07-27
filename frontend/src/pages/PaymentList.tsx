@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import ConfirmModal from "../components/ConfirmModal";
 import type { Payment } from "../types/types";
-import { fetchPayments, updatePaymentStatus } from "../api/paymentApi";
+import { fetchPayments, updatePaymentStatus } from "../api/paymentapi";
 
 export default function PaymentList() {
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -83,16 +83,21 @@ export default function PaymentList() {
                   <TableCell>£{" "}{Number(p.amount).toFixed(2)}</TableCell>
                   <TableCell>{p.account?.name || "Unknown"}</TableCell>
                   <TableCell>
-                    <Select
-                      value={p.status}
-                      onChange={(e) =>
-                        handleStatusChange(p.id, e.target.value as "Pending" | "Approved")
-                      }
-                    >
-                      <MenuItem value="Pending">Pending</MenuItem>
-                      <MenuItem value="Approved">Approved</MenuItem>
-                    </Select>
+                    {p.status === "Pending" ? (
+                      <Select
+                        value={p.status}
+                        onChange={(e) =>
+                          handleStatusChange(p.id, e.target.value as "Pending" | "Approved")
+                        }
+                      >
+                        <MenuItem value="Pending">Pending</MenuItem>
+                        <MenuItem value="Approved">Approved</MenuItem>
+                      </Select>
+                    ) : (
+                      <Typography sx={{ color: "green" }}>Approved</Typography>
+                    )}
                   </TableCell>
+
                 </TableRow>
               ))
             )}

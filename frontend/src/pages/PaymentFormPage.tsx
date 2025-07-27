@@ -1,17 +1,20 @@
-import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
+import { Box, Button, MenuItem, TextField, Typography, InputAdornment } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { createPayment } from "../api/paymentApi";
+import { createPayment } from "../api/paymentapi";
 import { fetchAccounts } from "../api/accountapi";
 import type { Account } from "../types/types";
 import { toast } from "react-toastify";
+import DuplicatePaymentModal from "../components/DuplicatePaymentModal";
 
 export default function PaymentFormPage() {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
+  const [duplicateModalOpen, setDuplicateModalOpen] = useState(false);
+  const [pendingData, setPendingData] = useState<any | null>(null);
 
   useEffect(() => {
     const loadAccounts = async () => {
@@ -39,9 +42,25 @@ export default function PaymentFormPage() {
       amount: parseFloat(data.amount),
     };
 
-    const created = await createPayment(formattedData);
-    if (created) {
+    const res = await createPayment(formattedData);
+
+    if (res && "id" in res) {
       navigate("/payments");
+    } else if (res && "allowDuplicate" in res) {
+      setPendingData(formattedData);
+      setDuplicateModalOpen(true);
+    }
+  };
+
+  const handleForceSubmit = async () => {
+    if (!pendingData) return;
+    const res = await createPayment(pendingData, true);
+    if (res && "id" in res) {
+      setDuplicateModalOpen(false);
+      setPendingData(null);
+      navigate("/payments");
+    } else {
+      toast.error("Failed to force create payment");
     }
   };
 
@@ -56,7 +75,7 @@ export default function PaymentFormPage() {
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
           <TextField
-            label="AccountID"
+            label="Account"
             fullWidth
             margin="normal"
             select
@@ -64,7 +83,7 @@ export default function PaymentFormPage() {
           >
             {accounts.map((acc) => (
               <MenuItem key={acc.id} value={acc.id}>
-                (ID: {acc.id}) {acc.name} 
+                (ID: {acc.id}) {acc.name}
               </MenuItem>
             ))}
           </TextField>
@@ -74,38 +93,25 @@ export default function PaymentFormPage() {
             fullWidth
             margin="normal"
             type="number"
+            InputProps={{
+              startAdornment: <InputAdornment position="start">£</InputAdornment>,
+            }}
             {...register("amount", { required: true })}
           />
-          <TextField
-            label="Recipient Name"
-            fullWidth
-            margin="normal"
-            {...register("recipientName", { required: true })}
-          />
-          <TextField
-            label="Bank Name"
-            fullWidth
-            margin="normal"
-            {...register("recipientBank", { required: true })}
-          />
-          <TextField
-            label="Recipient Account Number"
-            fullWidth
-            margin="normal"
-            {...register("recipientAccountNumber", { required: true })}
-          />
-          <TextField
-            label="Notes (optional)"
-            fullWidth
-            margin="normal"
-            {...register("notes")}
-          />
+          <TextField label="Recipient Name" fullWidth margin="normal" {...register("recipientName", { required: true })} />
+          <TextField label="Bank Name" fullWidth margin="normal" {...register("recipientBank", { required: true })} />
+          <TextField label="Recipient Account Number" fullWidth margin="normal" {...register("recipientAccountNumber", { required: true })} />
+          <TextField label="Notes (optional)" fullWidth margin="normal" {...register("notes")} />
 
-          <Button type="submit" variant="contained" sx={{ mt: 2 }}>
-            Submit
-          </Button>
+          <Button type="submit" variant="contained" sx={{ mt: 2 }}>Submit</Button>
         </form>
       )}
+
+      <DuplicatePaymentModal
+        open={duplicateModalOpen}
+        onClose={() => setDuplicateModalOpen(false)}
+        onConfirm={handleForceSubmit}
+      />
     </Box>
   );
 }

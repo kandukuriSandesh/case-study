@@ -1,4 +1,3 @@
-// src/api/paymentapi.ts
 import axios from "./axiosInstance";
 import { toast } from "react-toastify";
 import type { Payment } from "../types/types";
@@ -16,12 +15,19 @@ export const fetchPayments = async (): Promise<Payment[]> => {
 };
 
 // POST - Create a new payment
-export const createPayment = async (payment: Partial<Payment>): Promise<Payment | null> => {
+export const createPayment = async (
+  payment: Partial<Payment>,
+  forceDuplicate = false
+): Promise<Payment | { error: string; allowDuplicate: boolean } | null> => {
   try {
-    const res = await axios.post("/api/payments", payment);
+    const payload = { ...payment, ...(forceDuplicate && { force: true }) };
+    const res = await axios.post("/api/payments", payload);
     toast.success("Payment created successfully");
     return res.data;
   } catch (err: any) {
+    if (err.response?.status === 409 && err.response?.data?.allowDuplicate) {
+      return err.response.data; // trigger modal
+    }
     console.error(err);
     toast.error("Failed to create payment");
     return null;

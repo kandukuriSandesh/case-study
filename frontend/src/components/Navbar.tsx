@@ -31,7 +31,7 @@ export default function NavigationBar() {
                 color: "white",
               }}
             >
-              Case Study
+              Clearing App
             </NavLink>
           </Typography>
 
