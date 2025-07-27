@@ -1,4 +1,4 @@
-import axios from "./axiosInstance";
+import axios, { isAxiosError } from "axios";
 import { toast } from "react-toastify";
 import type { Account } from "../types/types";
 
@@ -13,6 +13,7 @@ export const fetchAccounts = async (): Promise<Account[]> => {
   }
 };
 
+
 export const createAccount = async (account: Partial<Account>): Promise<Account | null> => {
   try {
     const res = await axios.post("/api/accounts", account);
@@ -20,11 +21,17 @@ export const createAccount = async (account: Partial<Account>): Promise<Account 
     return res.data;
   } catch (err: unknown) {
     console.error(err);
-    if(err.response?.status === 409) {
-      toast.error('Account already exists with these details'); 
-      return null; 
+
+    if (isAxiosError(err)) {
+      if (err.response?.status === 409) {
+        toast.error("Account already exists with these details");
+        return null;
+      }
+      toast.error(err.response?.data?.message || "Failed to create account");
+    } else {
+      toast.error("An unexpected error occurred");
     }
-    toast.error("Failed to create account");
+
     return null;
   }
 };

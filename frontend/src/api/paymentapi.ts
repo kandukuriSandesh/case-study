@@ -1,4 +1,4 @@
-import axios from "./axiosInstance";
+import axios, { isAxiosError } from "axios";
 import { toast } from "react-toastify";
 import type { Payment } from "../types/types";
 
@@ -24,10 +24,13 @@ export const createPayment = async (
     const res = await axios.post("/api/payments", payload);
     toast.success("Payment created successfully");
     return res.data;
-  } catch (err:unknown) {
-    if (err.response?.status === 409 && err.response?.data?.allowDuplicate) {
-      return err.response.data; // trigger modal
+  } catch (err: unknown) {
+    if (isAxiosError(err)) {
+      if (err.response?.status === 409 && err.response.data?.allowDuplicate) {
+        return err.response.data; // trigger modal
+      }
     }
+
     console.error(err);
     toast.error("Failed to create payment");
     return null;
