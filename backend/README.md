@@ -13,6 +13,8 @@ npm install
 # Start development server
 npm run start:dev
 
+# Environment variables
+Create a .env file and include variables as per .env.example
 ---
 
 # 🔧 API Information
