@@ -65,11 +65,11 @@ export default function AccountFormPage() {
     <Box>
       <Typography variant="h5" mb={2}>{isEdit ? "Edit" : "New"} Account</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <TextField label="Name" fullWidth margin="normal" {...register("name")} required />
-        <TextField label="Address" fullWidth margin="normal" {...register("address")} required />
-        {/* <TextField label="Phone" fullWidth margin="normal" {...register("phoneNumber")} required /> */}
+        <TextField label="Name" InputLabelProps={{ shrink: true }} fullWidth margin="normal" {...register("name")} required />
+        <TextField label="Address" InputLabelProps={{ shrink: true }} fullWidth margin="normal" {...register("address")} required />
         <TextField
           label="Phone"
+          InputLabelProps={{ shrink: true }}
           fullWidth
           margin="normal"
           InputProps={{
@@ -86,7 +86,7 @@ export default function AccountFormPage() {
           helperText={errors.phoneNumber?.message}
         />
 
-        <TextField label="Bank Account (optional)" fullWidth margin="normal" {...register("bankAccountNumber")} />
+        <TextField InputLabelProps={{ shrink: true }} label="Bank Account (optional)" fullWidth margin="normal" {...register("bankAccountNumber")} />
         <Button type="submit" variant="contained">Submit</Button>
       </form>
     </Box>
