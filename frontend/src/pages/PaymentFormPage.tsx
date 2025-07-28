@@ -134,7 +134,7 @@ export default function PaymentFormPage() {
               name="amount"
               label="Amount"
               required
-              type="number"
+              numeric={true}
               adornmentStart="£"
             />
             <ControlledTextField
@@ -144,12 +144,13 @@ export default function PaymentFormPage() {
             />
             <ControlledTextField
               name="recipientBank"
-              label="Bank Name"
+              label="Recipient Bank Name"
               required
             />
             <ControlledTextField
               name="recipientAccountNumber"
               label="Recipient Account Number"
+              numeric={true}
               required
             />
             <ControlledTextField

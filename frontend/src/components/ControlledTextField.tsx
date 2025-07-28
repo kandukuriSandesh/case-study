@@ -12,6 +12,7 @@ type ControlledTextFieldProps = {
   label: string;
   required?: boolean;
   adornmentStart?: string;
+  numeric?: boolean;
   rules?: Parameters<typeof Controller>[0]["rules"];
 } & Omit<TextFieldProps, "name" | "label" | "variant">;
 
@@ -21,6 +22,7 @@ export default function ControlledTextField({
   required = false,
   adornmentStart,
   rules,
+  numeric = false,
   ...rest
 }: ControlledTextFieldProps) {
   const {
@@ -40,6 +42,7 @@ export default function ControlledTextField({
         <TextField
           {...field}
           {...rest}
+          type={numeric ? "number" : "text"}
           label={label}
           fullWidth
           margin="normal"

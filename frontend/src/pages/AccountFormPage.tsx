@@ -82,6 +82,7 @@ export default function AccountFormPage() {
             label="Phone"
             required
             adornmentStart="+44"
+            numeric={true}
             rules={{
               pattern: {
                 value: /^7\d{9}$/,
@@ -91,7 +92,8 @@ export default function AccountFormPage() {
           />
           <ControlledTextField
             name="bankAccountNumber"
-            label="Bank Account (optional)"
+            label="Bank Account Number (optional)"
+            numeric={true}
           />
 
           <Button type="submit" variant="contained">
