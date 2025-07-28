@@ -15,3 +15,11 @@ To start the entire project locally, just run:
 
 ```bash
 npm run setup-and-start
+
+
+Once running:
+
+🟦 Backend API will be accessible at: http://localhost:5001/api
+
+⚛️ Frontend UI will be accessible at: http://localhost:5173
+
