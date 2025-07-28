@@ -5,20 +5,20 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AccountsModule } from './accounts/accounts.module';
 import { PaymentsModule } from './payments/payments.module';
+import { DataSourceOptions } from 'typeorm';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }) as any, // Loads .env and makes it globally available
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT || '5432', 10),
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
+      url: 'postgresql://clearing_db_user:ALEQINctFlAMk5pvRT5Nf1qe4WzKxsq7@dpg-d233ve95pdvs739ick0g-a.frankfurt-postgres.render.com/clearing_db', //Hard coded upon confirming with the interviewer
       autoLoadEntities: true,
-      synchronize: true, // WARNING: Don't use true in production!
-    }),
+      synchronize: true,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    } as DataSourceOptions),
     AccountsModule,
     PaymentsModule,
   ],

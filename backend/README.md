@@ -6,16 +6,21 @@ This is a backend application built with **NestJS** and **PostgreSQL** for manag
 
 ## 🔧 Project Setup
 
-```bash
+# Clone the repo
+
+   ```bash
+   git clone https://github.com/kandukuriSandesh/case-study.git
+   cd backend
+   ```
+
 # Install dependencies
 npm install
 
+# Environment variables
+Create a .env file and include variables as per .env.example 
+
 # Start development server
 npm run start:dev
-
-# Environment variables
-Create a .env file and include variables as per .env.example
----
 
 # 🔧 API Information
 

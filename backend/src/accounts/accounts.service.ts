@@ -65,6 +65,6 @@ export class AccountsService {
   }
 
   async remove(id: number): Promise<void> {
-    await this.accountRepo.delete(id);
+    await this.accountRepo.delete(id); // Delete functionality is intentionally left out as it's not specified in the case study requirements.
   }
 }

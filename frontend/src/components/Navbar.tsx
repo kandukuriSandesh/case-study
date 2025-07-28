@@ -13,7 +13,7 @@ export default function NavigationBar() {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <AppBar position="static">
+    <AppBar position="sticky">
       <Toolbar>
         <Box
           display="flex"

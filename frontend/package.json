@@ -16,6 +16,7 @@
     "@mui/icons-material": "^7.2.0",
     "@mui/material": "^7.2.0",
     "axios": "^1.11.0",
+    "case-study": "file:..",
     "dayjs": "^1.11.13",
     "notistack": "^3.0.2",
     "react": "^19.1.0",

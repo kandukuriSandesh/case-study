@@ -16,14 +16,7 @@ This is a responsive frontend application for managing Accounts and Payments, bu
   * Recommended: v20.19.0 or v22.12.0+
   * Vite 7+ requires modern Node versions
 * **npm** (comes with Node.js)
-* **.env file**
 
-  * Create `.env` at the root with this format:
-
-    ```env
-    VITE_API_BASE_URL=http://localhost:5001/api
-    ```
-  * Ensure this is available during Vercel or other CI/CD builds
 
 ---
 
@@ -32,8 +25,8 @@ This is a responsive frontend application for managing Accounts and Payments, bu
 1. **Clone the repo**
 
    ```bash
-   git clone <your-repo-url>
-   cd your-project-directory
+   git clone https://github.com/kandukuriSandesh/case-study.git
+   cd frontend
    ```
 
 2. **Install dependencies**
@@ -42,32 +35,22 @@ This is a responsive frontend application for managing Accounts and Payments, bu
    npm install
    ```
 
-3. **Run locally**
+3. **.env file**
+
+  * Create `.env` at the root with this format:
+
+    ```env
+    VITE_API_BASE_URL=http://localhost:<YOUR_BACKEND_PORT>/api
+    ```
+  * Ensure this is available during Vercel or other CI/CD builds
+
+4. **Run locally**
 
    ```bash
    npm run dev
    ```
 
    Access the app at `http://localhost:5173`
-
----
-
-## 🚀 Vercel Deployment
-
-### Common Deployment Issues:
-
-* ❗ Missing files (e.g., `src/api/accountapi.ts`) due to Git not tracking them.
-* ❗ Case mismatch in import paths (Vercel is case-sensitive).
-* ❗ Environment variables must be set in Vercel dashboard.
-
-### Deployment Steps:
-
-1. Push your full project to GitHub (ensure `src/api` folder is tracked)
-2. Connect repo to Vercel
-3. Set environment variable in Vercel:
-
-   * `VITE_API_BASE_URL = http://your-backend-url/api`
-4. Trigger "Deploy with clean cache" if needed
 
 ---
 
