@@ -17,7 +17,11 @@ export class AccountsService {
   ) {}
 
   findAll(): Promise<Account[]> {
-    return this.accountRepo.find();
+    return this.accountRepo.find({
+      order: {
+        createdAt: 'DESC',
+      },
+    });
   }
 
   async findOne(id: number): Promise<Account> {

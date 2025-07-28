@@ -20,7 +20,12 @@ export class PaymentsService {
   ) {}
 
   findAll(): Promise<Payment[]> {
-    return this.paymentRepo.find({ relations: ['account'] });
+    return this.paymentRepo.find({
+      relations: ['account'],
+      order: {
+        createdAt: 'DESC',
+      },
+    });
   }
 
   async findOne(id: number): Promise<Payment> {

@@ -20,6 +20,7 @@ export default function ControlledTextField({
   label,
   required = false,
   adornmentStart,
+  rules,
   ...rest
 }: ControlledTextFieldProps) {
   const {
@@ -31,7 +32,10 @@ export default function ControlledTextField({
     <Controller
       name={name}
       control={control}
-      rules={required ? { required: `${label} is required` } : undefined}
+      rules={{
+        ...(required ? { required: `${label} is required` } : {}),
+        ...rules,
+      }}
       render={({ field }) => (
         <TextField
           {...field}
